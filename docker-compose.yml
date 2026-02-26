@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  remnawave:
+    image: remnawave:latest
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgres://postgres:password@db:5432/remnawave
+      - REDIS_URL=redis://cache:6379
+    depends_on:
+      - db
+      - cache
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=remnawave
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:latest
+    restart: unless-stopped
+
+  web:
+    image: caddy:latest
+    restart: unless-stopped
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - remnawave
+
+volumes:
+  db_data:
+  caddy_data:
+  caddy_config:
