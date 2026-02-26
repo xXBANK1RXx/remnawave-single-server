@@ -1,0 +1,13 @@
+# Caddyfile
+
+# This configuration sets up a reverse proxy for the webhook and API endpoints
+
+# Reverse proxy for the Webhook
+http://webhook.example.com {
+    reverse_proxy localhost:8080 # replace with actual backend server
+}
+
+# Reverse proxy for the API
+http://api.example.com {
+    reverse_proxy localhost:8081 # replace with actual backend server
+}
